@@ -1,0 +1,78 @@
+---
+title: "170721_coursera_developing data product(week4)"
+author: "Taesoon Kim"
+date: "Jul-21-2017"
+output:
+  slidy_presentation: default
+  ioslides_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+## Introduction and Assignment
+
+  - This assignment is course project in Coursera lecture, Developing data product.
+    + I will solve 2 questions
+  - Question 1.
+    + I have to use shiny() function, and share my server.R and ui.R
+    + In my code, I receive various input values, and output is mpg text
+  - Question 2.
+    + I will make rmarkdown and use slidify() function
+    + And share 5 page presentation in my github and Rpubs
+  
+## Slide with R Output
+
+```{r load, echo=TRUE}
+# Set the directory
+setwd("D:/1-1. R studio/Lecture9. Developing data product/week4/170724_coursera_ddp")
+
+# Load dataset
+data(mtcars)
+
+#check the "mtcars" data
+str(mtcars)
+```
+
+```{r MPG,echo=TRUE}
+# Focus on MPG and draw a histogram
+summary(mtcars$mpg)  # mpg consists of numbers, I can check
+
+# Draw a histogram with respect to MPG 
+
+hist(mtcars$mpg,breaks=10,main="Freq. of Miles per Gallon",xlab="MPG")
+```
+
+The largest number of MPG data is located in the 14~16 range. And also I can check that manual transmission uses more gas than automatic transmission.
+
+## Cross validation
+
+```{r cross validataion,echo=TRUE}
+# Separate the training data and testing data
+set.seed(135)
+library(ggplot2)
+library(lattice)
+library(caret)     # In order to use createDataPartition() function
+inTrain<-createDataPartition(mtcars$mpg,p=0.6,list=FALSE)
+training<-mtcars[inTrain,]
+testing<-mtcars[-inTrain,]
+dim(training)
+dim(testing)
+```
+
+I use createDataPartition() function, and separate training data(60%) and testing data(40%). I am going to adjust various modeling methods using training data, since then check the results correct or not using testing data.
+
+
+## Random forest
+
+```{r random forest,echo=TRUE,include=TRUE}
+# randomForest() function
+library(randomForest)
+rf_training<-randomForest(mpg~.,data=training,importance=TRUE)
+rf_training
+
+# draw a graph
+varImpPlot(rf_training,main="varImpPlot of train data",cex=0.7)
+```
+
+Using random forest method, I will check which variable is the most effective in this data set. In this data set, disp is the most effective and wt, hp, cyl are also effective. 
