@@ -34,6 +34,7 @@ data(mtcars)
 str(mtcars)
 ```
 
+
 ```{r MPG,echo=TRUE}
 # Focus on MPG and draw a histogram
 summary(mtcars$mpg)  # mpg consists of numbers, I can check
